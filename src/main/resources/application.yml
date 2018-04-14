@@ -1,0 +1,14 @@
+info:
+  component: NIBL API Service
+  version: '@project.version@'
+
+logging:
+  level:
+    org.springframework.boot.env.PropertySourcesLoader: ERROR
+    org.springframework.web: ERROR
+    com.nibl: DEBUG
+    org.hibernate.SQL: ERROR
+
+spring:
+  application:
+    name: nibl-xdcc
