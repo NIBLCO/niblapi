@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,7 @@ public class HentaiverseMonsterController {
                     @ApiResponse(code = 400, message = "Invalid parameters", response = ErrorResponse.class) })
     @RequestMapping(method = RequestMethod.GET, value = "/monsters/{monsterIds}")
     public ContentResponse<List<Monster>> getMonsters(@PathVariable Long[] monsterIds, HttpServletRequest request) {
-        log.debug("Enter /monsters/{monsterIds}. " + request.getQueryString());
+        log.debug("Enter /monsters/{monsterIds}. " + ArrayUtils.toString(monsterIds));
         return new ContentResponse<List<Monster>>(monsterService.findByMonsterIds(monsterIds));
     }
     
