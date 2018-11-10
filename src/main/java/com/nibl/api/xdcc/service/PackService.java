@@ -2,6 +2,7 @@ package com.nibl.api.xdcc.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -10,8 +11,13 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import com.nibl.api.util.PackComparator;
 import com.nibl.api.util.StringUtil;
 import com.nibl.api.xdcc.domain.Pack;
 
@@ -23,9 +29,22 @@ public class PackService {
     @Autowired
     BotService botService;
 
-    public List<Pack> getPacks(Integer botId) {
+    public List<Pack> getBotPacks(Integer botId) {
     	log.debug("Get packs for bot " + botId);
         return botService.getBot(botId).getPackList();
+    }
+    
+    public Page<Pack> getBotPacksPaged(Integer botId, Pageable pageable){
+        
+        List<Pack> packs = getBotPacks(botId);
+        for(Sort.Order o : pageable.getSort() ) {            
+            Collections.sort(packs, new PackComparator(o.getProperty(), o.getDirection().name()));
+        }
+        
+        
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > packs.size() ? packs.size() : (start + pageable.getPageSize());
+        return new PageImpl<Pack>(packs.subList(start, end), pageable, packs.size());
     }
 
     public List<Pack> searchPacks(String query, Integer episodeNumber) {
@@ -58,7 +77,20 @@ public class PackService {
     	return searchedPacks;
     }
     
-    public List<Pack> searchPacks(Integer botId, String query, Integer episodeNumber) {
+    public Page<Pack> searchPacksPaged(String query, Integer episodeNumber, Pageable pageable){
+        
+        List<Pack> packs = searchPacks(query,episodeNumber);
+        for(Sort.Order o : pageable.getSort() ) {            
+            Collections.sort(packs, new PackComparator(o.getProperty(), o.getDirection().name()));
+        }
+        
+        
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > packs.size() ? packs.size() : (start + pageable.getPageSize());
+        return new PageImpl<Pack>(packs.subList(start, end), pageable, packs.size());
+    }
+    
+    public List<Pack> searchBotPacks(Integer botId, String query, Integer episodeNumber) {
     	log.debug("Search packs for bot # " + botId + ". Query: " + query + " / EP#: " + episodeNumber);
     	List<Pack> searchedPacks = new ArrayList<Pack>();
     	
@@ -81,6 +113,19 @@ public class PackService {
     	}
     	
     	return searchedPacks;
+    }
+    
+    public Page<Pack> searchBotPacksPaged(Integer botId, String query, Integer episodeNumber, Pageable pageable){
+        
+        List<Pack> packs = searchBotPacks(botId,query,episodeNumber);
+        for(Sort.Order o : pageable.getSort() ) {            
+            Collections.sort(packs, new PackComparator(o.getProperty(), o.getDirection().name()));
+        }
+        
+        
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > packs.size() ? packs.size() : (start + pageable.getPageSize());
+        return new PageImpl<Pack>(packs.subList(start, end), pageable, packs.size());
     }
     
     public List<Pack> latestPacks(Integer size) {

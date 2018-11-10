@@ -38,8 +38,9 @@ public class PageResponse<T> extends Response {
      * @param page
      * @param request
      */
-    public PageResponse(String pageNumStr, Page<T> page, HttpServletRequest request) {
+    public PageResponse(Page<T> page, HttpServletRequest request) {
         super(HttpStatus.OK);
+        String pageNumStr = "page";
         int previousPageNumber = page.getNumber() - 1;
         int currentPageNumber = page.getNumber();
         int nextPageNumber = page.getNumber() + 1;
