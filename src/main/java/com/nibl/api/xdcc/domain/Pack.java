@@ -50,6 +50,10 @@ public class Pack implements Serializable {
     private String size;
 
     @JsonView(Views.Pack.class)
+    @Column(name = "sizekbits")
+    private Long sizekbits;
+    
+    @JsonView(Views.Pack.class)
     @Column(name = "episode_number")
     private Integer episodeNumber;
 
@@ -66,7 +70,7 @@ public class Pack implements Serializable {
     // ----------------------------------------------------------------------
     // CONSTRUCTOR(S)
     // ----------------------------------------------------------------------
-    public Pack(Long id, Integer botId, Integer number, String name, String size, Integer episodeNumber,
+    public Pack(Long id, Integer botId, Integer number, String name, String size, Long sizekbits, Integer episodeNumber,
     		Timestamp lastModified) {
         super();
         this.setId(id);
@@ -74,6 +78,7 @@ public class Pack implements Serializable {
         this.setNumber(number);
         this.setName(name);
         this.setSize(size);
+        this.setSizekbits(sizekbits);
         this.setEpisodeNumber(episodeNumber);
         this.setLastModified(lastModified);
     }
@@ -143,7 +148,15 @@ public class Pack implements Serializable {
         this.size = size;
     }
 
-    public Integer getEpisodeNumber() {
+    public Long getSizekbits() {
+		return sizekbits;
+	}
+
+	public void setSizekbits(Long sizekbits) {
+		this.sizekbits = sizekbits;
+	}
+
+	public Integer getEpisodeNumber() {
         return episodeNumber;
     }
 
@@ -178,6 +191,8 @@ public class Pack implements Serializable {
         sb.append(this.getName());
         sb.append("|");
         sb.append(this.getSize());
+        sb.append("|");
+        sb.append(this.getSizekbits());
         sb.append("|");
         sb.append(this.getEpisodeNumber());
         sb.append("|");
