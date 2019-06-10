@@ -41,8 +41,7 @@ public class PackService {
             Collections.sort(packs, new PackComparator(o.getProperty(), o.getDirection().name()));
         }
         
-        
-        int start = pageable.getOffset();
+        int start = (int)pageable.getOffset();
         int end = (start + pageable.getPageSize()) > packs.size() ? packs.size() : (start + pageable.getPageSize());
         return new PageImpl<Pack>(packs.subList(start, end), pageable, packs.size());
     }
@@ -85,7 +84,7 @@ public class PackService {
         }
         
         
-        int start = pageable.getOffset();
+        int start = (int)pageable.getOffset();
         int end = (start + pageable.getPageSize()) > packs.size() ? packs.size() : (start + pageable.getPageSize());
         return new PageImpl<Pack>(packs.subList(start, end), pageable, packs.size());
     }
@@ -123,7 +122,7 @@ public class PackService {
         }
         
         
-        int start = pageable.getOffset();
+        int start = (int)pageable.getOffset();
         int end = (start + pageable.getPageSize()) > packs.size() ? packs.size() : (start + pageable.getPageSize());
         return new PageImpl<Pack>(packs.subList(start, end), pageable, packs.size());
     }
